@@ -62,7 +62,7 @@ function checkMouse() {
 }
 
 function drawline(inX, inY, inPX, inPY) {
-    var pixelDist = Math.floor(getDistance(inX,inY, inPX, inPY));
+    var pixelDist = Math.ceil(getDistance(inX,inY, inPX, inPY)/canvasSize);
     if (pixelDist < 1) {
         emitPixel(inX, inY);
         drawPixelSelf(inX, inY);
@@ -76,19 +76,16 @@ function drawline(inX, inY, inPX, inPY) {
     }
 }
 
-function getDistance(x1, y1, x2, y2) {
-    var x = x2 - x1;
-    var y = y2 - y1;
-    return Math.sqrt(x * x + y * y);
-}
-
 function drawPixelSelf(inX, inY) {
     var tempX = Math.floor(inX/canvasSize);
     var tempY = Math.floor(inY/canvasSize);
     
+    tempX = clamp(tempX, 0, gridSize);
+    tempY = clamp(tempY, 0, gridSize);
+    /*
     if ((tempX < 0) || (tempX > gridSize)) {return;}
     if ((tempY < 0) || (tempY > gridSize)) {return;}
-    
+    */
     canvasMap[tempX][tempY] = colorIndex;
 }
 
@@ -100,9 +97,12 @@ function emitPixel(inX, inY) {
     var tempX = Math.floor(inX/canvasSize);
     var tempY = Math.floor(inY/canvasSize);
     
+    tempX = clamp(tempX, 0, gridSize);
+    tempY = clamp(tempY, 0, gridSize);
+    /*
     if ((tempX < 0) || (tempX > gridSize)) {return;}
     if ((tempY < 0) || (tempY > gridSize)) {return;}
-    
+    */
     var mouseData = {
         Color: colorIndex,
         X: tempX,
@@ -117,4 +117,17 @@ function newGame(gameData) {
     Palette = gameData.Palette;
     canvasSize = canvasCreateSize/gridSize;
     createPalette();
+}
+
+
+function getDistance(x1, y1, x2, y2) {
+    var x = x2 - x1;
+    var y = y2 - y1;
+    return Math.sqrt(x * x + y * y);
+}
+
+function clamp(value, min, max) {
+    if (value < min) {return min;}
+    if (value > max) {return max;}
+    return value;
 }
