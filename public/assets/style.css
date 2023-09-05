@@ -1,3 +1,19 @@
+:root {
+    --background-color: rgb(254, 251, 246);
+    --outline-color: rgb(51, 50, 56);
+}
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: rgb(51, 50, 56);
+        --outline-color: rgb(254, 251, 246);
+    }
+}*/
+
+body {
+    background: var(--background-color);
+}
+
 #game-container {
     display: flex;
     flex-direction: column;
@@ -6,7 +22,7 @@
 
 #selection {
     height: 96px;
-    background: white;
+    /*background: var(--background-color);*/
     width: 384px;
     display: flex;
     justify-content: space-evenly;
@@ -17,13 +33,14 @@
     width: 35px;
     height: 35px;
     background: rgb(0, 0, 255);
-    outline: 1px black solid;
+    outline: 1px var(--outline-color) solid;
+    transition: outline 0.12s ease;
 }
 
 [data-state="selected"] {
-    outline: 5px black solid;
+    outline: 5px var(--outline-color) solid;
 }
 
 canvas {
-    outline: 1px black solid;
+    outline: 1px var(--outline-color) solid;
 }
