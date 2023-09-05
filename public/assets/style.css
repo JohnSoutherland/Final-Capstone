@@ -37,6 +37,13 @@ body {
     transition: outline 0.12s ease;
 }
 
+@media (prefers-reduced-motion) {
+    .colors {
+        transition: outline 0s;
+    }
+}
+
+
 [data-state="selected"] {
     outline: 5px var(--outline-color) solid;
 }
