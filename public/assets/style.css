@@ -10,10 +10,6 @@
     }
 }*/
 
-html, body {
-    overscroll-behavior: none;
-}
-
 body {
     background: var(--background-color);
     max-height: 100vh;
