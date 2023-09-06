@@ -52,6 +52,10 @@ canvas {
     outline: 1px var(--outline-color) solid;
 }
 
-@media (min-width:600px) {
-    
+@media screen and (max-width: 480px) {
+    body {
+        max-height: 100vh;
+        overflow-y: hidden;
+        overscroll-behavior-y: contain;
+    }
 }
