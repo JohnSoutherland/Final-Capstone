@@ -12,12 +12,16 @@
 
 body {
     background: var(--background-color);
+    max-height: 100vh;
+    overflow-y: hidden;
+    overscroll-behavior-y: none;
 }
 
 #game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    touch-action: manipulation;
 }
 
 #selection {
@@ -51,15 +55,14 @@ body {
 canvas {
     outline: 1px var(--outline-color) solid;
 }
-
-@media screen and (max-width: 480px) {
+/*
+@media screen and (max-width: 600px) {
     body {
-        max-height: 100vh;
-        overflow-y: hidden;
-        overscroll-behavior-y: none;
+        
     }
     
     #game-container {
         touch-action: manipulation;
     }
 }
+*/
