@@ -56,6 +56,10 @@ canvas {
     body {
         max-height: 100vh;
         overflow-y: hidden;
-        overscroll-behavior-y: contain;
+        overscroll-behavior-y: none;
+    }
+    
+    #game-container {
+        touch-action: manipulation;
     }
 }
