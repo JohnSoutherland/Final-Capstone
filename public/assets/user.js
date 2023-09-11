@@ -1,6 +1,7 @@
 let socket;
 
-const canvasCreateSize = 384;
+const canvasCreateSize = 480;
+
 let gridSize = 0;
 let canvasMap = [];
 let Palette = [];
@@ -21,6 +22,7 @@ function setup() {
     socket.on("justJoined", newGame);
     socket.on("newMap", newGame);
     socket.on("updateClientMap", drawPixel);
+    socket.on("updateUser", createPrompt);
 }
 
 function draw() {
@@ -29,8 +31,6 @@ function draw() {
     if ((gridSize == 0) || (typeof canvasMap === 'undefined')) {
         return;
     }
-    
-    canvasSize = (canvasCreateSize/gridSize);
     
     // draw grid
     for (var i = 0; i < canvasMap.length; i++) {
@@ -44,6 +44,11 @@ function draw() {
     
     checkMouse();
 }
+
+function createPrompt(isGuesser) {
+    /// uhh
+}
+
 
 function checkMouse() {
     if ((mouseX > (canvasCreateSize-1)) || (mouseX < 0)) {return;}
