@@ -11,11 +11,26 @@
         <title>Pixel Perfect</title>
     </head>
     <body>
+        <div id="login-menu">
+            <h1>Welcome to <b>Pixel-Perfect</b></h1>
+            <h2>Please enter a Username</h2>
+            <div id="login-form">
+                <input type="text" id="username" placeholder="enter username here..." name="username">
+                <input type="button" value="login" onclick="validateUsername()">
+            </div>
+            <br>
+            <ul>
+                <li>Username must be at least 5 characters long</li>
+                <li>Username must only contain alphanumeric characters <i>(a-z and/or 0-9)</i></li>
+            </ul>
+        </div>
         <div id="game-container">
             <div id="selection">
-                
             </div>
             <div id="canvas-holder"></div>
+            <div id="prompt-holder">
+                <span id="prompt">You're not supposed to see this</span>
+            </div>
         </div>
         <style>
             html, body {

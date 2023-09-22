@@ -1,6 +1,7 @@
 :root {
-    --background-color: rgb(254, 251, 246);
-    --outline-color: rgb(51, 50, 56);
+    --background-color: 254, 251, 246;
+    --outline-color: 51, 50, 56;
+    font-family: sans-serif;
 }
 /*
 @media (prefers-color-scheme: dark) {
@@ -11,10 +12,12 @@
 }*/
 
 body {
-    background: var(--background-color);
+    background: rgb(var(--background-color));
     max-height: 100vh;
     overflow-y: hidden;
     overscroll-behavior-y: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 #game-container {
@@ -42,7 +45,7 @@ body {
     width: 35px;
     height: 35px;
     background: rgb(0, 0, 255);
-    outline: 1px var(--outline-color) solid;
+    outline: 1px rgb(var(--outline-color)) solid;
     transition: outline 0.12s ease;
 }
 
@@ -54,11 +57,11 @@ body {
 
 
 [data-state="selected"] {
-    outline: 5px var(--outline-color) solid;
+    outline: 5px rgb(var(--outline-color)) solid;
 }
 
 canvas {
-    outline: 1px var(--outline-color) solid;
+    outline: 1px rgb(var(--outline-color)) solid;
 }
 /*
 @media screen and (max-width: 600px) {
@@ -71,3 +74,79 @@ canvas {
     }
 }
 */
+
+#selection > #guess-input {
+    padding: 12px 20px;
+    display: block;
+    width: min(40vw, 300px);
+    text-align: center;
+    margin: auto 0;
+    font-size: 16pt;
+    border: 1px rgb(var(--outline-color)) solid;
+    margin-right: 16px;
+    background-color: rgb(var(--background-color));
+}
+
+
+#login-menu {
+    position: absolute;
+    --padding-size: 20px;
+    padding: var(--padding-size);
+    width: calc(100vw - var(--padding-size)*2);
+    height: calc(100vh - var(--padding-size)*2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    z-index: 5;
+    
+    background-color: rgba(var(--background-color), 0.9);
+}
+#login-menu > ul {
+    font-size: 12pt;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+#login-form > input {
+    padding: 12px 20px;
+    border-radius: 5px;
+}
+
+#login-form > input[type=text] {
+    width: min(40vw, 300px);
+    text-align: center;
+    font-size: 16pt;
+    margin-right: 16px;
+}
+#login-form > input[type=button] {
+    padding: 12px 20px;
+    font-size: 16pt;
+    background: rgb(235, 62, 70);
+}
+#login-form > input[type=button]:hover {
+    background: rgb(164, 44, 43);
+    cursor: pointer;
+}
+
+#prompt-holder {
+    padding-top: 5px;
+}
+#prompt {
+    /*https://stackoverflow.com/questions/69430/is-there-a-way-to-make-text-unselectable-on-an-html-page*/
+    -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+    font-size: 14pt;
+}
