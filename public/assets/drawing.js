@@ -69,10 +69,24 @@ function createUserInput() {
     input.setAttribute("type","text");
     input.setAttribute("id","guess-input");
     input.setAttribute("placeholder","Enter Guess here");
+    input.addEventListener("keyup", (e) => {
+        if (e.keyCode == 13) {
+            validateUserGuess(e);
+        }
+    });
     
     selection.appendChild(input);
     
     document.getElementById("prompt-holder").innerHTML = "";
+}
+
+function validateUserGuess() {
+    var guess = document.getElementById("guess-input");
+    var UserStatus = sessionStorage.getItem("user-game-status");
+    if ((guess.innerHTML) && (UserStatus === "guesser")) {
+        socket.emit("userGuess", guess.innerHTML);
+        guess.innerHTML = "";
+    }
 }
 
 // Drawing section

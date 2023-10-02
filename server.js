@@ -5,8 +5,8 @@ let server = app.listen(port);
 let sockets = require('socket.io');
 let io = sockets(server);
 
-const MAX_GAME_TIMER = 15;
-const MAX_WAIT_TIMER = 7;
+const MAX_GAME_TIMER = 20;
+const MAX_WAIT_TIMER = 5;
 
 let canvasMap;
 
@@ -17,6 +17,7 @@ let currentPalette = ["rgb(254, 252, 246)","rgb(158, 156, 156)","rgb(62, 60, 66)
 var sizeIndex = 3;
 
 let playerList = [];
+let prev_loggedplayerLength = -1;
 let playerDrawer = 0;
 //let playersGuessed = 0;
 
@@ -33,7 +34,7 @@ let promptList = [
     "crystal",
     "monster",
     "bed"
-]
+];
 
 let currentPrompt = -1;
 
@@ -46,22 +47,22 @@ function timerTick() {
     timer--;
     console.log("timer: %d", timer);
     
-    if (timer <= 0) {
-        
-        
+    if (timer < 0) {
         if (gamePlaying) {
             timer = MAX_WAIT_TIMER;
+            gamePlaying = false;
+            //  showResults();
         }
         else {
             timer = MAX_GAME_TIMER;
             next_artist();
-            clearInterval(timerInterval);
             newGame();
+            gamePlaying = true;
         }
         console.log("timer-reset: %d", timer);
         //playerDrawer = (playerDrawer+1)%playerList.length;
-        gamePlaying = !gamePlaying;
     }
+    socket.emit("timerTick", timer);
 }
 
 //creating new map
@@ -83,12 +84,21 @@ app.use(express.static('public'));
 io.on("connection", newConnection);
 
 function next_artist() {
-    playerList[playerDrawer].isDrawer = false;
-    playerDrawer = (playerDrawer+1)%playerList.length;
-    playerList[playerDrawer].isDrawer = true;
+    
+    if (playerDrawer > -1) {
+        
+        playerList[playerDrawer].isDrawer = false;
+        do {
+            playerDrawer = (playerDrawer+1)%playerList.length;
+        } while(!playerList[playerDrawer].loggedIn);
+
+        playerList[playerDrawer].isDrawer = true;
+    }
 }
 
 function addToPlayerList(playerID) {
+    prev_loggedplayerLength = playerList.length;
+    
     var playerInfo = {
         ID: playerID,
         Username: "",
@@ -98,8 +108,9 @@ function addToPlayerList(playerID) {
         points: 0
     };
     
-    //var prev_length = playerList.length;
+    //prev_loggedplayerLength = playerList.length;
     var length = playerList.push(playerInfo);
+    
     //if ((length > 1) && (prev_length < 2)) { 
         // Only start a new game if there are enough players
         // and ONLY when there weren't enough players prior.
@@ -127,6 +138,8 @@ function findPlayerByName(playerName) {
 }
 
 function removeFromPlayerList(playerID) {
+    prev_loggedplayerLength = playerList.length;
+    
     for (var i = 0; i < playerList.length; i++) {
         if (playerList[i].ID === playerID) {
             playerList.splice(i,1);
@@ -136,31 +149,38 @@ function removeFromPlayerList(playerID) {
                 playerDrawer--;
                 //since we're removing one player here
             }
-            //playerDrawer = (playerDrawer%(playerList.length));
-            
-            
-            if (playerList.length > 0) {
-                if (playerList[playerDrawer].isDrawer == false) {
-                    
-                    playerList[playerDrawer].isDrawer = true;
-                    io.to(playerList[playerDrawer].ID).emit("setUserStatus", "artist");
+            if (i == playerDrawer) {
+                if (playerDrawer >= playerList.length) {
+                    playerDrawer = playerDrawer%playerList.length;
                 }
             }
             
+            //playerDrawer = (playerDrawer%(playerList.length));
             // Might need to change this soon.
-            return;
+            break;
         }
         
     }
-    if (playerList.length == 1) {
-        //currentPrompt = -1;
-        io.to(playerList[0].ID).emit("drawPrompt", "please wait for enough players to join.");
+    
+    if (playerList.length > 0) {
+        if (playerList[playerDrawer].isDrawer == false) {
+
+            playerList[playerDrawer].isDrawer = true;
+            clearInterval(timerInterval);
+            newGame();
+        }
+    }
+    
+    if (playerList.length <= 1) {
+        if (playerList.length == 1) {
+            //currentPrompt = -1;
+            io.to(playerList[0].ID).emit("drawPrompt", "please wait for enough players to join.");
+        }
         clearInterval(timerInterval);
         gamePlaying = false;
     }
     //return false;
 }
-
 
 
 function returnGame() {
@@ -175,6 +195,8 @@ function returnGame() {
 function newGame() {
     newCanvas();
     timer = MAX_GAME_TIMER;
+    clearInterval(timerInterval);
+    
     currentPrompt = Math.floor(Math.random() * promptList.length);
     console.log("%d", currentPrompt);
     //currentPrompt++;
@@ -212,8 +234,8 @@ function newConnection(socket) {
     socket.on("disconnect", () => {
         console.log("%s disconnected.", socket.id);
         removeFromPlayerList(socket.id);
-        clearInterval(timerInterval);
-        gamePlaying = false;
+        //clearInterval(timerInterval);
+        //gamePlaying = false;
         console.log(playerList.length)
     });
     
@@ -225,6 +247,7 @@ function newConnection(socket) {
             playerList[index].loggedIn = true;
             playerList[index].Username = username;
             console.log("%s logged in as %s successfully.", socket.id, username);
+            //prev_loggedplayerLength = playerList.length;
             
             var status = "guesser"
             if (index == 0) {   
@@ -235,7 +258,8 @@ function newConnection(socket) {
             }
             socket.emit("setUserStatus", status);
         }
-        if (playerList.length > 1) {
+        if ((prev_loggedplayerLength < 2) && (playerList.length >= 2)) {
+            clearInterval(timerInterval);
             newGame();
         }
     }

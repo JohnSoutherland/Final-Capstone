@@ -30,8 +30,9 @@ function setup() {
     socket.on("newMap", newGame);
     socket.on("updateClientMap", drawPixel);
     socket.on("setUserStatus", setUserStatus);
-    socket.on("updateArtist", updateArtist);
+    //socket.on("updateArtist", updateArtist);
     socket.on("drawPrompt", setPromptDiv);
+    socket.on("timerTick", updateTimer);
 }
 
 function draw() {
@@ -54,7 +55,9 @@ function draw() {
     checkMouse();
 }
 
-
+function updateTimer(newTime) {
+    
+}
 
 // User-related functions
 
@@ -67,9 +70,11 @@ function validateUsername() {
     }
 }
 
-function updateArtist(isGuesser) {
+/*
+//function updateArtist(isGuesser) //{
     /// uhh
-}
+//}
+*/
 
 function newGame(gameData) {
     canvasMap = gameData.Grid;
@@ -78,5 +83,4 @@ function newGame(gameData) {
     canvasSize = canvasCreateSize/gridSize;
     //createPalette();
 }
-
 
