@@ -107,6 +107,13 @@ canvas {
     padding: 3px;
 }
 
+#username {
+    position: absolute;
+    right: 0;
+    font-size: 16pt;
+    text-align: right;
+    z-index: 20;
+}
 
 #login-menu {
     position: absolute;

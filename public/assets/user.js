@@ -66,8 +66,9 @@ function updateTimer(newTime) {
 function validateUsername() {    
     let username = document.getElementById("username").value.trim();
     
-    if ((username.length > 5) && (username.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1)) {
+    if ((username.length > 5) && (username.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]+/) == -1)) {
         //setUserStatus("guesser");
+        sessionStorage.setItem("user-login-name", username);
         socket.emit('loginUser', username);
     }
 }
@@ -105,6 +106,11 @@ function setUserStatus(drawStatus) {
     var results = document.getElementById('results-holder');
     if (results) {
         results.remove();
+    }
+    
+    var usernameHold = document.getElementById("username");
+    if (usernameHold && (usernameHold.innerHTML === "")) {
+        usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
     }
     
     sessionStorage.setItem("user-game-status", drawStatus);

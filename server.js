@@ -5,8 +5,10 @@ let server = app.listen(port);
 let sockets = require('socket.io');
 let io = sockets(server);
 
-const MAX_GAME_TIMER = 30;
-const MAX_WAIT_TIMER = 10;
+const MAX_GAME_TIMER = 60;
+const MAX_WAIT_TIMER = 14;
+
+const MIN_PLAYER_COUNT = 2;
 
 let canvasMap;
 
@@ -167,16 +169,14 @@ function removeFromPlayerList(playerID) {
         if (playerList[playerDrawer].isDrawer == false) {
 
             playerList[playerDrawer].isDrawer = true;
-            clearInterval(timerInterval);
+            //clearInterval(timerInterval);
             newGame();
         }
     }
     
-    if (playerList.length <= 1) {
-        if (playerList.length == 1) {
-            //currentPrompt = -1;
-            io.to(playerList[0].ID).emit("drawPrompt", "please wait for enough players to join.");
-        }
+    if (playerList.length < MIN_PLAYER_COUNT) {
+        //currentPrompt = -1;
+        io.emit("drawPrompt", "please wait for enough players to join.");
         clearInterval(timerInterval);
         gamePlaying = false;
     }
@@ -314,9 +314,13 @@ function newConnection(socket) {
                 playerDrawer = index;
                 status = "artist";
             }
+            if (!gamePlaying) {
+                status = "neither";
+            }
+            
             socket.emit("setUserStatus", status);
         }
-        if ((prev_loggedplayerLength < 2) && (playerList.length >= 2)) {
+        if ((prev_loggedplayerLength < MIN_PLAYER_COUNT) && (playerList.length >= MIN_PLAYER_COUNT)) {
             clearInterval(timerInterval);
             newGame();
         }
@@ -331,7 +335,7 @@ function newConnection(socket) {
                 promptOutput = promptList[currentPrompt];
             }
             
-            if (playerList.length < 2) {
+            if (playerList.length < MIN_PLAYER_COUNT) {
                 promptOutput = "please wait for enough players to join.";
             }
             
