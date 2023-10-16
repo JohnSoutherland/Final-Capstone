@@ -34,63 +34,7 @@ function changeColorSelection() {
     }
 };
 
-function setPromptDiv(prompt) {
-    var holder = document.getElementById("prompt-holder");
-    holder.innerHTML = "";
-    
-    var text = document.createElement("span");
-    text.setAttribute("id","prompt");
-    text.innerHTML = prompt;
-    
-    holder.appendChild(text);
-}
-
-function setUserStatus(drawStatus) {
-    var selection = document.getElementById('login-menu');
-    if (selection) {
-        selection.remove();
-    }
-    sessionStorage.setItem("user-game-status", drawStatus);
-    //console.log("setting status to %s;", drawStatus);
-    
-    if (drawStatus === "artist") {
-        createPalette();
-        socket.emit("requestPrompt");
-    } else if (drawStatus === "guesser") {
-        createUserInput();
-    }
-}
-
-function createUserInput() {
-    let selection = document.getElementById("selection");
-    selection.innerHTML = "";
-    
-    var input = document.createElement("input");
-    input.setAttribute("type","text");
-    input.setAttribute("id","guess-input");
-    input.setAttribute("placeholder","Enter Guess here");
-    input.addEventListener("keyup", (e) => {
-        if (e.keyCode == 13) {
-            validateUserGuess(e);
-        }
-    });
-    
-    selection.appendChild(input);
-    
-    document.getElementById("prompt-holder").innerHTML = "";
-}
-
-function validateUserGuess() {
-    var guess = document.getElementById("guess-input");
-    var UserStatus = sessionStorage.getItem("user-game-status");
-    if ((guess.innerHTML) && (UserStatus === "guesser")) {
-        socket.emit("userGuess", guess.innerHTML);
-        guess.innerHTML = "";
-    }
-}
-
-// Drawing section
-
+// Drawing functions
 function checkMouse() {
     var player_status = sessionStorage.getItem("user-game-status");
     if (player_status !== "artist") {return;}

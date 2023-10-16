@@ -88,6 +88,26 @@ canvas {
 }
 
 
+#results-holder {
+    position: absolute;
+    --padding-size: 20px;
+    padding: var(--padding-size);
+    width: calc(100vw - var(--padding-size)*2);
+    height: calc(100vh - var(--padding-size)*2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    z-index: 4;
+    
+    background-color: rgba(var(--background-color), 0.9);
+}
+#results-holder > table > tr > td {
+    padding: 3px;
+}
+
+
 #login-menu {
     position: absolute;
     --padding-size: 20px;
@@ -117,18 +137,22 @@ canvas {
     border-radius: 5px;
 }
 
-#login-form > input[type=text] {
+#login-form > input[type="text"] {
     width: min(40vw, 300px);
     text-align: center;
     font-size: 16pt;
     margin-right: 16px;
 }
-#login-form > input[type=button] {
+#login-form > input[type="text"][disabled] {
+    background: rgb(160, 160, 160);
+}
+
+#login-form > input[type="button"] {
     padding: 12px 20px;
     font-size: 16pt;
     background: rgb(235, 62, 70);
 }
-#login-form > input[type=button]:hover {
+#login-form > input[type="button"]:hover {
     background: rgb(164, 44, 43);
     cursor: pointer;
 }
@@ -149,4 +173,15 @@ canvas {
    -ms-user-select: none;
    user-select: none;
     font-size: 14pt;
+}
+
+#timer-holder {
+    position: absolute;
+    padding: 20px;
+    z-index: -1;
+}
+#timer {
+    font-family: monospace;
+    font-size: 38pt;
+    z-index: inherit;
 }

@@ -5,8 +5,8 @@ let server = app.listen(port);
 let sockets = require('socket.io');
 let io = sockets(server);
 
-const MAX_GAME_TIMER = 20;
-const MAX_WAIT_TIMER = 5;
+const MAX_GAME_TIMER = 30;
+const MAX_WAIT_TIMER = 10;
 
 let canvasMap;
 
@@ -19,7 +19,7 @@ var sizeIndex = 3;
 let playerList = [];
 let prev_loggedplayerLength = -1;
 let playerDrawer = 0;
-//let playersGuessed = 0;
+let playersGuessed = 0;
 
 let promptList = [
     "food",
@@ -47,11 +47,12 @@ function timerTick() {
     timer--;
     console.log("timer: %d", timer);
     
-    if (timer < 0) {
+    if (timer <= 0) {
         if (gamePlaying) {
+            playersGuessed = 0;
             timer = MAX_WAIT_TIMER;
             gamePlaying = false;
-            //  showResults();
+            showResults();
         }
         else {
             timer = MAX_GAME_TIMER;
@@ -62,7 +63,7 @@ function timerTick() {
         console.log("timer-reset: %d", timer);
         //playerDrawer = (playerDrawer+1)%playerList.length;
     }
-    socket.emit("timerTick", timer);
+    io.emit("timerTick", timer);
 }
 
 //creating new map
@@ -182,6 +183,35 @@ function removeFromPlayerList(playerID) {
     //return false;
 }
 
+function showResults() {
+    // sorting the whole thing from most to least points
+    function compare(a,b) {
+        if (a.points < b.points) {
+            return 1;
+        }
+        if (a.points > b.points) {
+            return -1;
+        }
+        return 0;
+    }
+    var results = [];
+    
+    for (var i = 0; i < playerList.length; i++) {
+        var playerEntry = {
+            name: playerList[i].Username,
+            points:  playerList[i].points
+        };
+        results.push(playerEntry);
+    }
+    results.sort(compare);
+    
+    var data = {
+        result: results,
+        prompt: promptList[currentPrompt]
+    }
+    
+    io.emit("showResults", data);
+}
 
 function returnGame() {
     var gameData = {
@@ -194,6 +224,7 @@ function returnGame() {
 
 function newGame() {
     newCanvas();
+    gamePlaying = true;
     timer = MAX_GAME_TIMER;
     clearInterval(timerInterval);
     
@@ -205,6 +236,8 @@ function newGame() {
     
     // Set all players Statuses...
     for (var i = 0; i < playerList.length; i++) {
+        if (playerList[i].loggedIn == false) {continue;}
+        
         playerList[i].alreadyGuessed = false;
         
         var new_status = "guesser";
@@ -216,6 +249,7 @@ function newGame() {
         
         io.to(playerList[i].ID).emit("setUserStatus", new_status);
     }
+    playersGuessed = 0;
     
     timerInterval = setInterval(timerTick, 1000);
     // asdadasda
@@ -230,6 +264,7 @@ function newConnection(socket) {
     socket.on("updateMap", updateMap);
     socket.on("loginUser", logInPlayer);
     socket.on("requestPrompt", retrievePrompt);
+    socket.on("userGuess", compareGuess);
     
     socket.on("disconnect", () => {
         console.log("%s disconnected.", socket.id);
@@ -239,6 +274,29 @@ function newConnection(socket) {
         console.log(playerList.length)
     });
     
+    function compareGuess(guess) {
+        console.log("%s has guessed %s", socket.id, guess);
+        if (guess === promptList[currentPrompt]) {
+            var index = findPlayerByID(socket.id);
+            
+            if (index == -1) {return;}
+            if (playerList[index].alreadyGuessed) {return;}
+            if (!gamePlaying) {return;}
+            
+            playerList[index].alreadyGuessed = true;
+            // award points...
+            var awardedPoints = 50*(timer/MAX_GAME_TIMER)
+            playerList[index].points = awardedPoints;
+            playerList[playerDrawer].points += awardedPoints/(playerList.length-1);
+            
+            console.log("%s has guessed correctly!", playerList[index].Username);
+            playersGuessed++;
+            if (playersGuessed >= playerList.length-1) {
+                timer = 0;
+            }
+            socket.emit("disableGuess", true);
+        }
+    }
     
     function logInPlayer(username) {
         var index = findPlayerByID(socket.id);
