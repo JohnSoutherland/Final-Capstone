@@ -287,7 +287,7 @@ function newConnection(socket) {
             playerList[index].alreadyGuessed = true;
             // award points...
             var awardedPoints = 50*(timer/MAX_GAME_TIMER)
-            playerList[index].points = awardedPoints;
+            playerList[index].points += awardedPoints;
             playerList[playerDrawer].points += awardedPoints/(playerList.length-1);
             
             console.log("%s has guessed correctly!", playerList[index].Username);

@@ -164,6 +164,11 @@ canvas {
     cursor: pointer;
 }
 
+#login-form > td,th {
+    table-layout: fixed;
+    width: 35vw;
+}
+
 #prompt-holder {
     padding-top: 5px;
 }

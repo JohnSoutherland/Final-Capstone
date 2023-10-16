@@ -121,6 +121,7 @@ function setUserStatus(drawStatus) {
         socket.emit("requestPrompt");
     } else if (drawStatus === "guesser") {
         createUserInput();
+        document.getElementById("prompt-holder").innerHTML = "";
     }
 }
 

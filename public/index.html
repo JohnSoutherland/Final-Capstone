@@ -19,11 +19,37 @@
                 <input type="button" value="login" onclick="validateUsername()">
             </div>
             <br>
-            <ul>
-                <li>Username must be at least 5 characters long</li>
-                <li>Username must only contain alphanumeric characters <i>(a-z and/or 0-9)</i></li>
-                <li>Username must be a unique name.</li>
-            </ul>
+            <table>
+                <tr>
+                    <th>
+                        Username Requirements
+                    </th>
+                    <th>
+                        How to Play
+                    </th>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Username must be at least 5 characters long.</li>
+                            <li>Username must only contain alphanumeric characters <i>(a-z and/or 0-9)</i>.</li>
+                            <li>Username must be a unique name.</li>
+                            <li>Please enter an appropriate username.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Everyone who joins and logs in takes turns drawing and guessing.</li>
+                            <li>The game starts when enough players have joined and entered a username.</li>
+                            <li>The player who is drawing, the <i>artist</i>, will have to draw a given word located below the canvas.</li>
+                            <li>The rest of the players, the <i>guessers</i>, will have to guess what the drawing is.</li>
+                            <li>Points are awarded to the <i>artist</i> and the players who guessed correctly</li>
+                            <li>Points are also scaled based on how soon they guessed or, if they're the artist, how many have guessed right.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </div>
         <span id="username-display"></span>
         <div id="timer-holder">
