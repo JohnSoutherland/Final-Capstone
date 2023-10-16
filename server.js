@@ -177,6 +177,7 @@ function removeFromPlayerList(playerID) {
     if (playerList.length < MIN_PLAYER_COUNT) {
         //currentPrompt = -1;
         io.emit("drawPrompt", "please wait for enough players to join.");
+        io.emit("setUserStatus", "artist");
         clearInterval(timerInterval);
         gamePlaying = false;
     }
@@ -308,13 +309,13 @@ function newConnection(socket) {
             //prev_loggedplayerLength = playerList.length;
             
             var status = "guesser"
-            if (index == 0) {   
+            if (playerList.length < MIN_PLAYER_COUNT) {   
                 // the player is the first to join
                 playerList[index].isDrawer = true;
                 playerDrawer = index;
                 status = "artist";
             }
-            if (!gamePlaying) {
+            if ((!gamePlaying) && (playerList.length < MIN_PLAYER_COUNT)) {
                 status = "neither";
             }
             
