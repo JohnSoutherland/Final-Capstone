@@ -108,7 +108,7 @@ function setUserStatus(drawStatus) {
         results.remove();
     }
     
-    var usernameHold = document.getElementById("username");
+    var usernameHold = document.getElementById("username-display");
     if (usernameHold && (usernameHold.innerHTML === "")) {
         usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
     }

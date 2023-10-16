@@ -107,7 +107,7 @@ canvas {
     padding: 3px;
 }
 
-#username {
+#username-display {
     position: absolute;
     right: 0;
     font-size: 16pt;
