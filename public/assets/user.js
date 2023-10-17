@@ -66,10 +66,10 @@ function updateTimer(newTime) {
 function validateUsername() {    
     let username = document.getElementById("username").value.trim();
     
-    if ((username.length > 5) && (username.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]+/) == -1)) {
+    if ((username.length > 5) && ((username.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1)) && (username.trim() !== "")) {
         //setUserStatus("guesser");
-        sessionStorage.setItem("user-login-name", username);
-        socket.emit('loginUser', username);
+        sessionStorage.setItem("user-login-name", username.trim());
+        socket.emit('loginUser', username.trim());
     }
 }
 
@@ -133,6 +133,7 @@ function createUserInput() {
     input.setAttribute("type","text");
     input.setAttribute("id","guess-input");
     input.setAttribute("placeholder","Enter Guess here");
+    input.setAttribute("maxlength", "16");
     input.addEventListener("keyup", (e) => {
         if (e.keyCode == 13) {
             //console.log("ENTER PRESSED;");

@@ -12,18 +12,18 @@ const MIN_PLAYER_COUNT = 2;
 
 let canvasMap;
 
-let canvasSize = [8, 16, 24, 32];
+let canvasSize = [32, 24, 16, 8];
 /*let currentPalette = ["rgb(254, 252, 246)","rgb(158, 156, 156)"];*/
-let currentPalette = ["rgb(254, 252, 246)","rgb(158, 156, 156)","rgb(62, 60, 66)","rgb(202, 60, 66)"];
+let currentPalette = ["rgb(254, 252, 246)","rgb(158, 156, 156)","rgb(62, 60, 66)","rgb(202, 60, 66)", "rgb(81, 79, 218)", "rgb(54, 193, 95)"];
 
-var sizeIndex = 3;
+var sizeIndex = 0;
 
 let playerList = [];
 let prev_loggedplayerLength = -1;
 let playerDrawer = 0;
 let playersGuessed = 0;
 
-let promptList = [
+const promptList = [
     "food",
     "money",
     "traffic",
@@ -35,7 +35,45 @@ let promptList = [
     "people",
     "crystal",
     "monster",
-    "bed"
+    "bed",
+    "noise",
+    "hand",
+    "magic",
+    "happy",
+    "teacher",
+    "elephant",
+    "athlete",
+    "explosion",
+    "love",
+    "space",
+    "marriage",
+    "dessert",
+    "desert",
+    "magnetic",
+    "orbit",
+    "math",
+    "earth",
+    "garden",
+    "sign",
+    "random",
+    "friendship",
+    "movie",
+    "alcohol",
+    "virus",
+    "football",
+    "time",
+    "genetics",
+    "alert",
+    "dungeon",
+    "boss",
+    "angry",
+    "party",
+    "plane",
+    "cute",
+    "judge",
+    "computer",
+    "forest",
+    "pet"
 ];
 
 let currentPrompt = -1;
@@ -47,7 +85,7 @@ let timer = MAX_GAME_TIMER;
 
 function timerTick() {
     timer--;
-    console.log("timer: %d", timer);
+    //console.log("timer: %d", timer);
     
     if (timer <= 0) {
         if (gamePlaying) {
@@ -177,6 +215,7 @@ function removeFromPlayerList(playerID) {
     if (playerList.length < MIN_PLAYER_COUNT) {
         //currentPrompt = -1;
         io.emit("drawPrompt", "please wait for enough players to join.");
+        io.emit("timerTick", "--");
         io.emit("setUserStatus", "artist");
         clearInterval(timerInterval);
         gamePlaying = false;
@@ -229,8 +268,13 @@ function newGame() {
     timer = MAX_GAME_TIMER;
     clearInterval(timerInterval);
     
-    currentPrompt = Math.floor(Math.random() * promptList.length);
-    console.log("%d", currentPrompt);
+    var newPrompt = 0;
+    do {
+        newPrompt = Math.floor(Math.random() * promptList.length);
+    } while(newPrompt == currentPrompt);
+    
+    currentPrompt = newPrompt;
+    //console.log("%d", currentPrompt);
     //currentPrompt++;
     
     io.emit("newMap", returnGame());
@@ -286,9 +330,9 @@ function newConnection(socket) {
             
             playerList[index].alreadyGuessed = true;
             // award points...
-            var awardedPoints = 50*(timer/MAX_GAME_TIMER)
+            var awardedPoints = Math.round(50*(timer/MAX_GAME_TIMER))
             playerList[index].points += awardedPoints;
-            playerList[playerDrawer].points += awardedPoints/(playerList.length-1);
+            playerList[playerDrawer].points += Math.round(awardedPoints/(playerList.length-1));
             
             console.log("%s has guessed correctly!", playerList[index].Username);
             playersGuessed++;
@@ -315,7 +359,7 @@ function newConnection(socket) {
                 playerDrawer = index;
                 status = "artist";
             }
-            if ((!gamePlaying) && (playerList.length < MIN_PLAYER_COUNT)) {
+            if ((!gamePlaying) || (playerList.length < MIN_PLAYER_COUNT)) {
                 status = "neither";
             }
             

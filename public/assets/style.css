@@ -1,6 +1,9 @@
 :root {
     --background-color: 254, 251, 246;
+    --background-alt-color: 245, 201, 203;
     --outline-color: 51, 50, 56;
+    
+    
     font-family: sans-serif;
 }
 /*
@@ -101,18 +104,31 @@ canvas {
     
     z-index: 4;
     
-    background-color: rgba(var(--background-color), 0.9);
+    background-color: rgba(var(--background-alt-color), 0.7);
+}
+#results-holder > table {
+    margin-top: 10px;
 }
 #results-holder > table > tr > td {
     padding: 3px;
 }
 
-#username-display {
+#username-display-holder {
     position: absolute;
+    display: block;
+    margin: 5px;
     right: 0;
+    z-index: 20;
+}
+#username-display {
+    /* Just taking this from the prompt thing. */
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     font-size: 16pt;
     text-align: right;
-    z-index: 20;
 }
 
 #login-menu {
@@ -128,10 +144,13 @@ canvas {
     
     z-index: 5;
     
-    background-color: rgba(var(--background-color), 0.9);
+    background-color: rgba(var(--background-alt-color), 0.7);
 }
 #login-menu > ul {
     font-size: 12pt;
+}
+#login-menu > table {
+    margin-top: 10px;
 }
 
 #login-form {
@@ -151,7 +170,7 @@ canvas {
     margin-right: 16px;
 }
 #login-form > input[type="text"][disabled] {
-    background: rgb(160, 160, 160);
+    background: rgb(110, 110, 110);
 }
 
 #login-form > input[type="button"] {
@@ -193,6 +212,13 @@ canvas {
     z-index: -1;
 }
 #timer {
+    /* Just taking this from the prompt thing. */
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
     font-family: monospace;
     font-size: 38pt;
     z-index: inherit;
