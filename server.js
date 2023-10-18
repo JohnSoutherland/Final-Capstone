@@ -252,7 +252,7 @@ function showResults() {
     var data = {
         result: results,
         prompt: promptList[currentPrompt],
-        timerup: (playersGuessed == (playerList.length-1))
+        timerup: (playersGuessed != (playerList.length-1))
     }
     
     io.emit("showResults", data);

@@ -178,7 +178,7 @@ function displayResults(data) {
     
     var header = document.createElement("h1");
     var textholder = "TIME'S UP!";
-    if (!data.timerup) {
+    if (data.timerup == false) {
         textholder = "EVERYONE GUESSED THE WORD CORRECTLY!"
     }
     
