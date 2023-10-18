@@ -1,6 +1,10 @@
 :root {
     --background-color: 254, 251, 246;
     --background-alt-color: 245, 201, 203;
+    
+    --background-red-color: 245, 201, 203;
+    --background-green-color: 203, 245, 201;
+    
     --outline-color: 51, 50, 56;
     
     
@@ -58,6 +62,11 @@ body {
     }
 }
 
+@media (max-width: 480px) {
+    #login-menu > table {
+        visibility: hidden;
+    }
+}
 
 [data-state="selected"] {
     outline: 5px rgb(var(--outline-color)) solid;
@@ -88,6 +97,8 @@ canvas {
     border: 1px rgb(var(--outline-color)) solid;
     margin-right: 16px;
     background-color: rgb(var(--background-color));
+    
+    text-transform: lowercase;
 }
 
 
@@ -104,8 +115,15 @@ canvas {
     
     z-index: 4;
     
-    background-color: rgba(var(--background-alt-color), 0.7);
+    background-color: rgba(var(--background-color), 0.9);
 }
+#results-holder[data-time-up="false"] {
+    background-color: rgba(var(--background-green-color), 0.9)
+}
+#results-holder[data-time-up="true"] {
+    background-color: rgba(var(--background-red-color), 0.9)
+}
+
 #results-holder > table {
     margin-top: 10px;
 }
@@ -144,7 +162,7 @@ canvas {
     
     z-index: 5;
     
-    background-color: rgba(var(--background-alt-color), 0.7);
+    background-color: rgba(var(--background-color), 1.0);
 }
 #login-menu > ul {
     font-size: 12pt;

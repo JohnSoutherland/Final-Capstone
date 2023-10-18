@@ -80,6 +80,10 @@ function validateUsername() {
 */
 
 function newGame(gameData) {
+    var results = document.getElementById('results-holder');
+    if (results) {
+        results.remove();
+    }
     canvasMap = gameData.Grid;
     gridSize = gameData.Pixel;
     Palette = gameData.Palette;
@@ -102,10 +106,6 @@ function setUserStatus(drawStatus) {
     var selection = document.getElementById('login-menu');
     if (selection) {
         selection.remove();
-    }
-    var results = document.getElementById('results-holder');
-    if (results) {
-        results.remove();
     }
     
     var usernameHold = document.getElementById("username-display");
@@ -174,15 +174,23 @@ function displayResults(data) {
     
     var resultholder = document.createElement("div");
     resultholder.setAttribute("id", "results-holder");
+    resultholder.setAttribute("data-time-up", data.timerup);
     
     var header = document.createElement("h1");
-    var text = document.createTextNode("ROUND OVER");
+    var textholder = "TIME'S UP!";
+    if (!data.timerup) {
+        textholder = "EVERYONE GUESSED THE WORD CORRECTLY!"
+    }
+    
+    var text = document.createTextNode(textholder);
     header.append(text);
     resultholder.appendChild(header);
     
     header = document.createElement("h2");
+    textholder = data.prompt.charAt(0).toUpperCase() + data.prompt.slice(1);
+    
     text = document.createTextNode(
-    "The word was '"+data.prompt+"'.");
+    "The word was \""+textholder+"\".");
     header.append(text);
     resultholder.appendChild(header);
     

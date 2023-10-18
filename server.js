@@ -216,7 +216,7 @@ function removeFromPlayerList(playerID) {
         //currentPrompt = -1;
         io.emit("drawPrompt", "please wait for enough players to join.");
         io.emit("timerTick", "--");
-        io.emit("setUserStatus", "artist");
+        io.emit("setUserStatus", "neither");
         clearInterval(timerInterval);
         gamePlaying = false;
     }
@@ -235,8 +235,11 @@ function showResults() {
         return 0;
     }
     var results = [];
+    var playersGuessed = 0;
     
     for (var i = 0; i < playerList.length; i++) {
+        if (playerList[i].alreadyGuessed) {playersGuessed++;}
+        
         var playerEntry = {
             name: playerList[i].Username,
             points:  playerList[i].points
@@ -244,10 +247,12 @@ function showResults() {
         results.push(playerEntry);
     }
     results.sort(compare);
+    //var timerUp = (playersGuessed == (playerList.length-1));
     
     var data = {
         result: results,
-        prompt: promptList[currentPrompt]
+        prompt: promptList[currentPrompt],
+        timerup: (playersGuessed == (playerList.length-1))
     }
     
     io.emit("showResults", data);
