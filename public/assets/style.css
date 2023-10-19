@@ -62,7 +62,7 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
     #login-menu > table {
         visibility: hidden;
     }
@@ -134,7 +134,7 @@ canvas {
 #username-display-holder {
     position: absolute;
     display: block;
-    margin: 5px;
+    margin: 15px;
     right: 0;
     z-index: 20;
 }
@@ -227,7 +227,7 @@ canvas {
 #timer-holder {
     position: absolute;
     padding: 20px;
-    z-index: -1;
+    z-index: 20;
 }
 #timer {
     /* Just taking this from the prompt thing. */

@@ -1,7 +1,8 @@
 let socket;
 
-const canvasCreateSize = 480;
+const Default_canvasCreateSize = 480;
 const Mobile_canvasCreateSize = 384;
+let canvasCreateSize = Default_canvasCreateSize;
 
 let gridSize = 0;
 let canvasMap = [];
@@ -15,10 +16,11 @@ sessionStorage.setItem("user-game-status","just-joined");
 
 function setup() {
     
-    let canvas = createCanvas(canvasCreateSize, canvasCreateSize);
-    if (window.innerWidth < 600) {
-        canvas = createCanvas(Mobile_canvasCreateSize,Mobile_canvasCreateSize);
+    if (window.innerWidth < 500) {
+        canvasCreateSize = Mobile_canvasCreateSize; 
     }
+    
+    let canvas = createCanvas(canvasCreateSize, canvasCreateSize);
     canvas.parent("canvas-holder");
     
     colorMode(RGB, 255);
@@ -66,10 +68,12 @@ function updateTimer(newTime) {
 function validateUsername() {    
     let username = document.getElementById("username").value.trim();
     
-    if ((username.length > 5) && ((username.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1)) && (username.trim() !== "")) {
+    var trimmedName = username.trim();
+    
+    if ((trimmedName.length >= 3) && ((trimmedName.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1)) && (trimmedName !== "")) {
         //setUserStatus("guesser");
-        sessionStorage.setItem("user-login-name", username.trim());
-        socket.emit('loginUser', username.trim());
+        sessionStorage.setItem("user-login-name", trimmedName);
+        socket.emit('loginUser', trimmedName);
     }
 }
 
@@ -179,7 +183,7 @@ function displayResults(data) {
     var header = document.createElement("h1");
     var textholder = "TIME'S UP!";
     if (data.timerup == false) {
-        textholder = "EVERYONE GUESSED THE WORD CORRECTLY!"
+        textholder = "EVERYONE GUESSED CORRECTLY!"
     }
     
     var text = document.createTextNode(textholder);
