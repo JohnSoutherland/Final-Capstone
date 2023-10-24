@@ -16,7 +16,7 @@ sessionStorage.setItem("user-game-status","just-joined");
 
 function setup() {
     
-    if (window.innerWidth < 500) {
+    if (window.innerWidth < 600) {
         canvasCreateSize = Mobile_canvasCreateSize; 
     }
     
@@ -70,18 +70,12 @@ function validateUsername() {
     
     var trimmedName = username.trim();
     
-    if ((trimmedName.length >= 3) && ((trimmedName.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1)) && (trimmedName !== "")) {
+    if ((trimmedName.length >= 3) && ((trimmedName.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]+/) == -1)) && (trimmedName !== "")) {
         //setUserStatus("guesser");
         sessionStorage.setItem("user-login-name", trimmedName);
         socket.emit('loginUser', trimmedName);
     }
 }
-
-/*
-//function updateArtist(isGuesser) //{
-    /// uhh
-//}
-*/
 
 function newGame(gameData) {
     var results = document.getElementById('results-holder');
@@ -107,9 +101,9 @@ function setPromptDiv(prompt) {
 }
 
 function setUserStatus(drawStatus) {
-    var selection = document.getElementById('login-menu');
-    if (selection) {
-        selection.remove();
+    var login_menu = document.getElementById('login-menu');
+    if (login_menu) {
+        login_menu.remove();
     }
     
     var usernameHold = document.getElementById("username-display");
@@ -117,6 +111,12 @@ function setUserStatus(drawStatus) {
         usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
     }
     
+    var results_screen = document.getElementById("results-holder");
+    if (results_screen) {
+        results_screen.remove();
+    }
+    
+    resetUserTools();
     sessionStorage.setItem("user-game-status", drawStatus);
     //console.log("setting status to %s;", drawStatus);
     
@@ -129,9 +129,14 @@ function setUserStatus(drawStatus) {
     }
 }
 
-function createUserInput() {
+function resetUserTools() {
     let selection = document.getElementById("selection");
-    selection.innerHTML = "";
+    if (selection) {
+        selection.innerHTML = "";
+    }
+}
+
+function createUserInput() {
     
     var input = document.createElement("input");
     input.setAttribute("type","text");

@@ -1,6 +1,5 @@
 function createPalette() {
     let selection = document.getElementById("selection");
-    selection.innerHTML = "";
     
     for (var i = 0; i < Palette.length; i++) {
         var colorOption = document.createElement("div");
@@ -33,6 +32,15 @@ function changeColorSelection() {
         }
     }
 };
+
+function fillCanvas() {
+    for (var i = 0; i < canvasMap.length ; i++) {
+        for (var k = 0; k < canvasMap[i].length; i++) {
+            drawPixelSelf(i, k);
+            drawPixel(i, k);
+        }
+    }
+}
 
 // Drawing functions
 function checkMouse() {

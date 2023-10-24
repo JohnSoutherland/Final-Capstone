@@ -164,11 +164,19 @@ canvas {
     
     background-color: rgba(var(--background-color), 1.0);
 }
+/*
 #login-menu > ul {
     font-size: 12pt;
 }
 #login-menu > table {
     margin-top: 10px;
+}
+*/
+#rules-table {
+    margin-top: 16px;
+    table-layout: fixed;
+    width: min(650px, 35vw);
+    font-size: 12pt;
 }
 
 #login-form {
@@ -200,11 +208,11 @@ canvas {
     background: rgb(164, 44, 43);
     cursor: pointer;
 }
-
+/*
 #login-form > td,th {
     table-layout: fixed;
     width: 35vw;
-}
+}*/
 
 #prompt-holder {
     padding-top: 5px;
