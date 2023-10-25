@@ -1,25 +1,3 @@
-function createPalette() {
-    let selection = document.getElementById("selection");
-    
-    for (var i = 0; i < Palette.length; i++) {
-        var colorOption = document.createElement("div");
-        
-        colorOption.setAttribute("data-index", i);
-        colorOption.classList.add("colors");
-        colorOption.style.backgroundColor = Palette[i];
-        
-        if (i == colorIndex) {
-            colorOption.setAttribute("data-state", "selected");
-        } else {
-            colorOption.setAttribute("data-state", "unselected");
-        }
-        // https://stackoverflow.com/questions/19655189/javascript-click-event-listener-on-class
-        
-        colorOption.addEventListener('click', changeColorSelection, false);
-        selection.appendChild(colorOption);
-    }
-}
-
 // https://stackoverflow.com/questions/21211906/get-value-from-element-in-the-clicked-class
 function changeColorSelection() {
     colorIndex = this.getAttribute("data-index");
@@ -34,10 +12,12 @@ function changeColorSelection() {
 };
 
 function fillCanvas() {
-    for (var i = 0; i < canvasMap.length ; i++) {
-        for (var k = 0; k < canvasMap[i].length; i++) {
-            drawPixelSelf(i, k);
-            drawPixel(i, k);
+    if (sessionStorage.getItem("user-game-status") !== "artist") {return;}
+    
+    for (var i = 0; i < gridSize; i++) {
+        for (var k = 0; k < gridSize; k++) {
+            drawPixelSelf(i, k, false);
+            emitPixel(i, k, false);
         }
     }
 }
@@ -77,12 +57,17 @@ function drawline(inX, inY, inPX, inPY) {
     }
 }
 
-function drawPixelSelf(inX, inY) {
-    var tempX = Math.floor(inX/canvasSize);
-    var tempY = Math.floor(inY/canvasSize);
+function drawPixelSelf(inX, inY, calculate = true) {
+    var tempX = inX;
+    var tempY = inY;
     
-    tempX = clamp(tempX, 0, gridSize);
-    tempY = clamp(tempY, 0, gridSize);
+    if (calculate) {
+        tempX = Math.floor(inX/canvasSize);
+        tempY = Math.floor(inY/canvasSize);
+
+        tempX = clamp(tempX, 0, gridSize);
+        tempY = clamp(tempY, 0, gridSize);
+    }
     /*
     if ((tempX < 0) || (tempX > gridSize)) {return;}
     if ((tempY < 0) || (tempY > gridSize)) {return;}
@@ -94,12 +79,17 @@ function drawPixel(data) {
     canvasMap[data.X][data.Y] = data.Color;
 }
 
-function emitPixel(inX, inY) {
-    var tempX = Math.floor(inX/canvasSize);
-    var tempY = Math.floor(inY/canvasSize);
+function emitPixel(inX, inY, calculate = true) {
+    var tempX = inX;
+    var tempY = inY;
     
-    tempX = clamp(tempX, 0, gridSize);
-    tempY = clamp(tempY, 0, gridSize);
+    if (calculate) {
+        tempX = Math.floor(inX/canvasSize);
+        tempY = Math.floor(inY/canvasSize);
+
+        tempX = clamp(tempX, 0, gridSize);
+        tempY = clamp(tempY, 0, gridSize);
+    }
     /*
     if ((tempX < 0) || (tempX > gridSize)) {return;}
     if ((tempY < 0) || (tempY > gridSize)) {return;}

@@ -51,9 +51,22 @@ body {
     margin: auto 0;
     width: 35px;
     height: 35px;
-    background: rgb(0, 0, 255);
+    background: rgb(255, 0, 255);
     outline: 1px rgb(var(--outline-color)) solid;
     transition: outline 0.12s ease;
+}
+#fill-option {
+    display: block;
+    margin: auto 0;
+    margin-right: 30px;
+    width: 75px;
+    height: 45px;
+    border-radius: 4px;
+    background: rgb(var(--background-color)); 
+    outline: 1px rgb(var(--outline-color)) solid;
+}
+#fill-option:hover {
+    cursor: pointer
 }
 
 @media (prefers-reduced-motion) {
@@ -68,8 +81,8 @@ body {
     }
 }
 
-[data-state="selected"] {
-    outline: 5px rgb(var(--outline-color)) solid;
+.colors[data-state="selected"] {
+    outline: 6px rgb(var(--outline-color)) solid;
 }
 
 canvas {
@@ -175,7 +188,7 @@ canvas {
 #rules-table {
     margin-top: 16px;
     table-layout: fixed;
-    width: min(650px, 35vw);
+    width: min(850px, 45vw);
     font-size: 12pt;
 }
 

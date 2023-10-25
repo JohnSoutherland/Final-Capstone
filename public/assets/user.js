@@ -37,6 +37,92 @@ function setup() {
     socket.on("timerTick", updateTimer);
     socket.on("disableGuess", disableGuessing);
     socket.on("showResults", displayResults);
+    
+    
+    function setUserStatus(drawStatus) {
+        var login_menu = document.getElementById('login-menu');
+        if (login_menu) {
+            login_menu.remove();
+        }
+
+        var usernameHold = document.getElementById("username-display");
+        if (usernameHold && (usernameHold.innerHTML === "")) {
+            usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
+        }
+
+        var results_screen = document.getElementById("results-holder");
+        if (results_screen) {
+            results_screen.remove();
+        }
+
+        resetUserTools();
+        sessionStorage.setItem("user-game-status", drawStatus);
+        //console.log("setting status to %s;", drawStatus);
+
+        if (drawStatus === "artist") {
+            createPalette();
+            socket.emit("requestPrompt");
+        } else if (drawStatus === "guesser") {
+            createUserInput();
+            document.getElementById("prompt-holder").innerHTML = "";
+        }
+    }
+
+    function resetUserTools() {
+        let selection = document.getElementById("selection");
+        if (selection) {
+            selection.innerHTML = "";
+        }
+    }
+
+    function createUserInput() {
+
+        var input = document.createElement("input");
+        input.setAttribute("type","text");
+        input.setAttribute("id","guess-input");
+        input.setAttribute("placeholder","Enter Guess here");
+        input.setAttribute("maxlength", "16");
+        input.addEventListener("keyup", (e) => {
+            if (e.keyCode == 13) {
+                //console.log("ENTER PRESSED;");
+                validateUserGuess();
+            }
+        });
+
+        selection.appendChild(input);
+
+        document.getElementById("prompt-holder").innerHTML = "";
+    }
+    
+    function createPalette() {
+        let selection = document.getElementById("selection");
+
+        if (!selection) {return;}
+
+        var fillOption = document.createElement("button");
+        fillOption.setAttribute("id","fill-option");
+        fillOption.setAttribute("onclick", "fillCanvas()");
+        fillOption.innerHTML = "Fill all"
+        selection.appendChild(fillOption);
+        
+        for (var i = 0; i < Palette.length; i++) {
+            var colorOption = document.createElement("div");
+
+            colorOption.setAttribute("data-index", i);
+            colorOption.classList.add("colors");
+            colorOption.style.backgroundColor = Palette[i];
+
+            if (i == colorIndex) {
+                colorOption.setAttribute("data-state", "selected");
+            } else {
+                colorOption.setAttribute("data-state", "unselected");
+            }
+            // https://stackoverflow.com/questions/19655189/javascript-click-event-listener-on-class
+
+            colorOption.addEventListener('click', changeColorSelection, false);
+            selection.appendChild(colorOption);
+    }
+}
 }
 
 function draw() {
@@ -98,61 +184,6 @@ function setPromptDiv(prompt) {
     text.innerHTML = prompt;
     
     holder.appendChild(text);
-}
-
-function setUserStatus(drawStatus) {
-    var login_menu = document.getElementById('login-menu');
-    if (login_menu) {
-        login_menu.remove();
-    }
-    
-    var usernameHold = document.getElementById("username-display");
-    if (usernameHold && (usernameHold.innerHTML === "")) {
-        usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
-    }
-    
-    var results_screen = document.getElementById("results-holder");
-    if (results_screen) {
-        results_screen.remove();
-    }
-    
-    resetUserTools();
-    sessionStorage.setItem("user-game-status", drawStatus);
-    //console.log("setting status to %s;", drawStatus);
-    
-    if (drawStatus === "artist") {
-        createPalette();
-        socket.emit("requestPrompt");
-    } else if (drawStatus === "guesser") {
-        createUserInput();
-        document.getElementById("prompt-holder").innerHTML = "";
-    }
-}
-
-function resetUserTools() {
-    let selection = document.getElementById("selection");
-    if (selection) {
-        selection.innerHTML = "";
-    }
-}
-
-function createUserInput() {
-    
-    var input = document.createElement("input");
-    input.setAttribute("type","text");
-    input.setAttribute("id","guess-input");
-    input.setAttribute("placeholder","Enter Guess here");
-    input.setAttribute("maxlength", "16");
-    input.addEventListener("keyup", (e) => {
-        if (e.keyCode == 13) {
-            //console.log("ENTER PRESSED;");
-            validateUserGuess();
-        }
-    });
-    
-    selection.appendChild(input);
-    
-    document.getElementById("prompt-holder").innerHTML = "";
 }
 
 function validateUserGuess() {

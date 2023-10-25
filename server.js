@@ -362,6 +362,7 @@ function newGame() {
 function next_artist() {
     
     if ((playerDrawer > -1) && (loggedplayers >= MIN_PLAYER_COUNT)){
+        
         // is the index out of range?
         if (playerDrawer >= playerList.length) {
             // it's out of range; loop back around and find a viable candidate.
