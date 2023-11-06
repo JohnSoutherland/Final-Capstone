@@ -16,7 +16,7 @@ sessionStorage.setItem("user-game-status","just-joined");
 
 function setup() {
     
-    if (window.innerWidth < 600) {
+    if (window.innerWidth <= 500) {
         canvasCreateSize = Mobile_canvasCreateSize; 
     }
     
@@ -32,7 +32,7 @@ function setup() {
     socket.on("newMap", newGame);
     socket.on("updateClientMap", drawPixel);
     socket.on("setUserStatus", setUserStatus);
-    //socket.on("updateArtist", updateArtist);
+    socket.on("updateArtist", createPalette);
     socket.on("drawPrompt", setPromptDiv);
     socket.on("timerTick", updateTimer);
     socket.on("disableGuess", disableGuessing);
@@ -40,27 +40,33 @@ function setup() {
     
     
     function setUserStatus(drawStatus) {
-        var login_menu = document.getElementById('login-menu');
-        if (login_menu) {
-            login_menu.remove();
-        }
+        {
+            var login_menu = document.getElementById('login-menu');
+            if (login_menu) {
+                login_menu.remove();
+            }
 
-        var usernameHold = document.getElementById("username-display");
-        if (usernameHold && (usernameHold.innerHTML === "")) {
-            usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
-        }
+            var difficulty = document.getElementById("difficulty-menu");
+            if (difficulty) {
+                difficulty.remove();
+            }
 
-        var results_screen = document.getElementById("results-holder");
-        if (results_screen) {
-            results_screen.remove();
-        }
+            var usernameHold = document.getElementById("username-display");
+            if (usernameHold && (usernameHold.innerHTML === "")) {
+                usernameHold.innerHTML = sessionStorage.getItem("user-login-name");
+            }
 
+            var results_screen = document.getElementById("results-holder");
+            if (results_screen) {
+                results_screen.remove();
+            }
+        }
         resetUserTools();
         sessionStorage.setItem("user-game-status", drawStatus);
         //console.log("setting status to %s;", drawStatus);
 
         if (drawStatus === "artist") {
-            createPalette();
+            createDifficulty();
             socket.emit("requestPrompt");
         } else if (drawStatus === "guesser") {
             createUserInput();
@@ -68,6 +74,37 @@ function setup() {
         }
     }
 
+    function createDifficulty() {
+        var difficulty = document.createElement("div");
+        difficulty.setAttribute("id","difficulty-menu");
+        
+        var heading = document.createElement("h1");
+        heading.append( document.createTextNode("You are now the Artist!") );
+        difficulty.appendChild(heading);
+        
+        heading = document.createElement("h3");
+        heading.append( document.createTextNode("Choose your difficulty.") );
+        difficulty.appendChild(heading);
+        
+        
+        var options = document.createElement("div");
+        options.setAttribute("id", "difficulty-options");
+        var option_text = ["Easy", "Normal", "Hard", "Extreme"];
+        
+        for (var option = 0; option < option_text.length; option++) {
+            var button = document.createElement("input");
+            button.setAttribute("type","button");
+            button.setAttribute("value",option_text[option]);
+            button.setAttribute("class","difficulty-buttons");
+            button.setAttribute("onclick", new String("setDifficulty(" + option + ")") );
+            
+            options.appendChild(button);
+        }
+        
+        difficulty.appendChild(options);
+        document.body.appendChild(difficulty);
+    }
+    
     function resetUserTools() {
         let selection = document.getElementById("selection");
         if (selection) {
@@ -76,7 +113,12 @@ function setup() {
     }
 
     function createUserInput() {
-
+        let selection = document.getElementById("selection");
+        
+        if (!selection) {return;}
+        
+        selection.innerHTML = "";
+        
         var input = document.createElement("input");
         input.setAttribute("type","text");
         input.setAttribute("id","guess-input");
@@ -90,8 +132,6 @@ function setup() {
         });
 
         selection.appendChild(input);
-
-        document.getElementById("prompt-holder").innerHTML = "";
     }
     
     function createPalette() {
@@ -102,7 +142,7 @@ function setup() {
         var fillOption = document.createElement("button");
         fillOption.setAttribute("id","fill-option");
         fillOption.setAttribute("onclick", "fillCanvas()");
-        fillOption.innerHTML = "Fill all"
+        fillOption.innerHTML = "Fill all";
         selection.appendChild(fillOption);
         
         for (var i = 0; i < Palette.length; i++) {
@@ -123,6 +163,16 @@ function setup() {
             selection.appendChild(colorOption);
     }
 }
+}
+
+function setDifficulty(index) {
+    if (sessionStorage.getItem("user-game-status") === "artist") {
+        var difficulty = document.getElementById("difficulty-menu");
+        if (difficulty) {
+            difficulty.remove();
+            socket.emit("setGameParameters", index);
+        }
+    }
 }
 
 function draw() {
@@ -147,7 +197,9 @@ function draw() {
 
 function updateTimer(newTime) {
     var timer = document.getElementById("timer");
-    timer.innerHTML = newTime;
+    if (timer) {
+        timer.innerHTML =newTime;
+    }
 }
 
 // User-related functions
@@ -157,7 +209,6 @@ function validateUsername() {
     var trimmedName = username.trim();
     
     if ((trimmedName.length >= 3) && ((trimmedName.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]+/) == -1)) && (trimmedName !== "")) {
-        //setUserStatus("guesser");
         sessionStorage.setItem("user-login-name", trimmedName);
         socket.emit('loginUser', trimmedName);
     }
@@ -172,7 +223,6 @@ function newGame(gameData) {
     gridSize = gameData.Pixel;
     Palette = gameData.Palette;
     canvasSize = canvasCreateSize/gridSize;
-    //createPalette();
 }
 
 function setPromptDiv(prompt) {

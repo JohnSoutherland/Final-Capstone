@@ -12,59 +12,108 @@ app.use(express.static('public'));
 
 io.on("connection", newConnection);
 
-
 // Prompt variables
 const promptList = [
-    "food",
+    "bee",
+    "star",
+    "smile",
+    "bear",
+    "dinosaur",
+    "jail",
+    "mouse",
+    "dna",
+    "pear",
+    "apple",
     "money",
-    "traffic",
-    "car",
-    "author",
-    "library",
-    "news",
-    "music",
-    "people",
-    "crystal",
-    "monster",
-    "bed",
-    "noise",
-    "hand",
-    "magic",
     "happy",
-    "teacher",
-    "elephant",
-    "athlete",
-    "explosion",
+    "sad",
+    "mad",
+    "music",
     "love",
-    "space",
-    "marriage",
-    "dessert",
-    "desert",
-    "magnetic",
-    "orbit",
-    "math",
-    "earth",
-    "garden",
     "sign",
-    "random",
-    "friendship",
-    "movie",
-    "alcohol",
     "virus",
-    "football",
-    "time",
-    "DNA",
-    "alert",
-    "dungeon",
-    "boss",
-    "angry",
-    "party",
+    "bacteria",
     "plane",
-    "cute",
-    "judge",
     "computer",
+    "dog",
+    "cat",
+    "time",
     "forest",
-    "pet"
+    "tree",
+    "space",
+    "planet",
+    "earth",
+    "saturn",
+    "moon",
+    "window",
+    "horse",
+    "bell",
+    "pen",
+    "stick",
+    "magic",
+    "hook",
+    "house",
+    "truck",
+    "car",
+    "sun",
+    "bow",
+    "chimney",
+    "web",
+    "train",
+    "bed",
+    "glasses",
+    "snake",
+    "pyramid",
+    "fork",
+    "king",
+    "bone",
+    "snail",
+    "eye",
+    "face",
+    "mouth",
+    "snowflake",
+    "desk",
+    "bread",
+    "spider",
+    "ant",
+    "ocean",
+    "desert",
+    "coin",
+    "rock",
+    "chair",
+    "onion",
+    "ship",
+    "bottle",
+    "spear",
+    "paw",
+    "boat",
+    "torch",
+    "plant",
+    "meat",
+    "candle",
+    "mail",
+    "hammer",
+    "wrench",
+    "hand",
+    "palm",
+    "spring",
+    "fire",
+    "cake",
+    "camera",
+    "knife", 
+    "sandwich",
+    "cup",
+    "tank",
+    "stairs",
+    "castle",
+    "ghost",
+    "ring",
+    "wheel",
+    "guitar",
+    "balloon",
+    "saw",
+    "curve",
+    "cape"
 ];
 
 let currentPrompt = -1;
@@ -87,22 +136,61 @@ const paletteColors = [
         ["rgb(255,245,217)", "rgb(245,214,137)", "rgb(235,162,84)", "rgb(47,114,158)", "rgb(38,61,110)", "rgb(25,25,48)"],
         
         // BRAZIL FLAG++ by 'o_emanuel' from Lospec
-        ["rgb(224,232,205)", "rgb(230,203,71)", "rgb(222,145,57)", "rgb(57,164,65)", "rgb(66,94,154)", "rgb(39,33,53)"]
+        ["rgb(224,232,205)", "rgb(230,203,71)", "rgb(222,145,57)", "rgb(57,164,65)", "rgb(66,94,154)", "rgb(39,33,53)"],
         
-        //
-        //["","","","","",""]
+        // CURIOSITIES by sukinapan from Lospec
+        ["rgb(255, 238, 204)", "rgb(255, 176, 163)", "rgb(255, 105, 115)", "rgb(0, 185, 190)", "rgb(21, 120, 140)", "rgb(70, 66, 94)"],
+        
+        // BLACK AND WHITE-6 by Hadoc Haddockson from Lospec
+        ["rgb(255, 242, 230)", "rgb(189, 181, 168)", "rgb(160, 147, 142)", "rgb(125, 112, 113)", "rgb(90, 83, 83)", "rgb(32, 29, 31)"]
     ],
     
     //      4 COLORS
     [
-        ["rgb(254, 252, 246)","rgb(158, 156, 156)","rgb(62, 60, 66)","rgb(202, 60, 66)"],
+        // default
+        ["rgb(254, 252, 246)", "rgb(158, 156, 156)", "rgb(62, 60, 66)", "rgb(202, 60, 66)"],
         
+        // 2BIT DEMICHROME by Space Sandwich from Lospec
+        ["rgb(233, 239, 236)", "rgb(160, 160, 139)", "rgb(85, 85, 104)", "rgb(33, 30, 32)"],
+        
+        // AYY4 by Polyducks from Lospec
+        ["rgb(241, 242, 218)", "rgb(255, 206, 150)", "rgb(255, 119, 119)", "rgb(0, 48, 59)"],
+        
+        // SODA-CAP by Cappuchi from Lospec
+        ["rgb(232, 231, 203)", "rgb(252, 166, 172)", "rgb(255, 125, 110)", "rgb(33, 118, 204)"],
+        
+        // AUTUMN CHILL by Dolph from Lospec
+        ["rgb(218, 211, 175)", "rgb(213, 136, 99)", "rgb(194, 58, 115)", "rgb(44, 30, 116)"],
+        
+        // BICYCLE by Braquen from Lospec
+        ["rgb(240, 240, 240)", "rgb(143, 155, 246)", "rgb(171, 70, 70)", "rgb(22, 22, 22)"],
+        
+        // STAR POP by Dr_Succubus from Lospec
+        ["rgb(255, 235, 229)", "rgb(255, 163, 214)", "rgb(100, 185, 202)", "rgb(103, 69, 119)"]
     ],
     
     //      2 COLORS
     [
-        ["rgb(255,255,255)","rgb(0,0,0)"],
-        ["rgb(223, 21, 33)","rgb(20, 45, 50)"]
+        // default
+        ["rgb(254, 252, 246)", "rgb(62,60,66)"],
+        
+        // PAPERBACK-2 by Doph from Lospec
+        ["rgb(184, 194, 185)", "rgb(56, 43, 38)"],
+        
+        // MAC PAINT by Polyducks from Lospec
+        ["rgb(139, 200, 254)", "rgb(5, 27, 44)"],
+        
+        // Y'S NEUTRAL GREEN by Yelta from Lospec
+        ["rgb(255, 234, 249)", "rgb(0, 76, 61)"],
+        
+        // Y'S FLOWERS AND ASBESTOS by Yelta from Lospec
+        ["rgb(237, 244, 255)", "rgb(198, 43, 105)"],
+        
+        // ST 1-BIT ENDGAME by Skiller Thomson from Lospec
+        ["rgb(220, 242, 157)", "rgb(27, 18, 51)"],
+        
+        // REESES PUFF 1-BIT PALETTE by skeddles from Lospec
+        ["rgb(203, 152, 103)", "rgb(111, 77, 61)"]
     ],
 ];
 const canvasOptions = [
@@ -326,12 +414,12 @@ function newGame() {
         newPrompt = Math.floor(Math.random() * promptList.length);
     } while(newPrompt == currentPrompt);
     currentPrompt = newPrompt;
-    
+    /*
     // Picking a new random palette
     var paletteSelection = canvasOptions[optionIndex].palette;
     var paletteIndex = Math.floor(Math.random() * paletteSelection.length);
     currentPalette = paletteSelection[paletteIndex];
-    
+    */
     newCanvas();
     
     // sending new game data to players
@@ -501,8 +589,10 @@ function newConnection(socket) {
     function setNewParameters(index) {
         // check if player is the artist.
         var player = findPlayerByID(socket.id);
+        if (player == -1) {return;}
+        
         if (player > -1) {
-            if (!playerList[index].isDrawer) {return;}
+            if (!playerList[player].isDrawer) {return;}
         }
         
         // check if index is even within range
@@ -518,6 +608,7 @@ function newConnection(socket) {
             // send to everyone
             io.emit("newMap", returnGameData());
         }
+        socket.emit("updateArtist", "artist");
     }
     
 }; 

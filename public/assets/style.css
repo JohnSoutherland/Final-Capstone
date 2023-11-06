@@ -23,6 +23,8 @@ body {
     max-height: 100vh;
     overflow-y: hidden;
     overscroll-behavior-y: none;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
     padding: 0px;
     margin: 0px;
 }
@@ -55,6 +57,7 @@ body {
     outline: 1px rgb(var(--outline-color)) solid;
     transition: outline 0.12s ease;
 }
+
 #fill-option {
     display: block;
     margin: auto 0;
@@ -67,18 +70,6 @@ body {
 }
 #fill-option:hover {
     cursor: pointer
-}
-
-@media (prefers-reduced-motion) {
-    .colors {
-        transition: outline 0s;
-    }
-}
-
-@media (max-width: 500px) {
-    #login-menu > table {
-        visibility: hidden;
-    }
 }
 
 .colors[data-state="selected"] {
@@ -126,6 +117,8 @@ canvas {
     justify-content: center;
     align-items: center;
     
+    text-align: center;
+    
     z-index: 4;
     
     background-color: rgba(var(--background-color), 0.9);
@@ -149,7 +142,7 @@ canvas {
     display: block;
     margin: 15px;
     right: 0;
-    z-index: 20;
+    z-index: -1;
 }
 #username-display {
     /* Just taking this from the prompt thing. */
@@ -226,6 +219,46 @@ canvas {
     table-layout: fixed;
     width: 35vw;
 }*/
+#difficulty-menu {
+    position: absolute;
+    --padding-size: 20px;
+    padding: var(--padding-size);
+    width: calc(100vw - var(--padding-size)*2);
+    height: calc(100vh - var(--padding-size)*2);
+    
+    text-align: center;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    z-index: 3;
+    
+    background-color: rgba(var(--background-color), 0.9); 
+}
+#difficulty-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-self: center;
+    justify-content: space-around;
+}
+.difficulty-buttons {
+    width: 150px;
+    height: 60px;
+    padding: 12px 20px;
+    margin: 10px;
+    
+    font-size: 16pt;
+    text-align: center;
+    color: white;
+    
+    background: rgb(194, 64, 63);
+}
+.difficulty-buttons:hover {
+    background: rgb(124, 44, 43);
+    cursor: pointer;
+}
 
 #prompt-holder {
     padding-top: 5px;
@@ -248,7 +281,7 @@ canvas {
 #timer-holder {
     position: absolute;
     padding: 20px;
-    z-index: 20;
+    z-index: -1;
 }
 #timer {
     /* Just taking this from the prompt thing. */
@@ -261,4 +294,21 @@ canvas {
     font-family: monospace;
     font-size: 38pt;
     z-index: inherit;
+}
+
+
+@media (prefers-reduced-motion) {
+    .colors {
+        transition: outline 0s;
+    }
+}
+
+@media (max-width: 500px) {
+    #login-menu > table {
+        display: none;
+    }
+    
+    #difficulty-options {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
